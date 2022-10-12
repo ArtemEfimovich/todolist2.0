@@ -22,9 +22,9 @@ export const Todolist: React.FC<TodolistPropsType> = ({title, tasks}) => {
                 <button>+</button>
             </div>
             <ul>
-                <li><input type="checkbox" checked={tasks[0].isDone}/> <span>{tasks[0].title}</span></li>
-                <li><input type="checkbox" checked={tasks[1].isDone}/> <span>{tasks[1].title}</span></li>
-                <li><input type="checkbox" checked={tasks[2].isDone}/> <span>{tasks[2].title}</span></li>
+                {tasks.map(({id,isDone,title})=>{
+                    return  <li key={id}><input type="checkbox" checked={isDone}/> <span>{title}</span></li>
+                })}
             </ul>
             <div>
                 <button>All</button>
