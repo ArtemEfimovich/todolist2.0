@@ -13,7 +13,9 @@ type TodolistPropsType = {
     tasks: TaskType[],
     removeTask: (taskId: string) => void,
     changeFilter: (value: FilterValueType) => void,
-    addTask: (taskTitle: string) => void
+    addTask: (taskTitle: string) => void,
+    changeTaskStatus: (id: string, isDone: boolean) => void,
+    filter: string,
 }
 
 
@@ -22,14 +24,23 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                                                           tasks,
                                                           removeTask,
                                                           changeFilter,
-                                                          addTask
+                                                          addTask,
+                                                          changeTaskStatus,
+                                                          filter
                                                       }) => {
 
     let [taskTitle, setTitle] = useState('')
+    let [error, setError] = useState<string | null>(null)
 
     const onAddTask = () => {
-        addTask(taskTitle)
-        setTitle('')
+        setError(null)
+        if (taskTitle.trim() !== '') {
+            addTask(taskTitle)
+            setTitle('')
+        } else {
+            setError('Title is required')
+        }
+
     }
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -58,8 +69,10 @@ export const Todolist: React.FC<TodolistPropsType> = ({
             <div>
                 <input value={taskTitle} onChange={onChangeHandler}
                        onKeyPress={onKeyPressHandler}
+                       className={error ? 'error' : ''}
                 />
                 <button onClick={onAddTask}>+</button>
+                {error && <div className='error-message'>{error}</div>}
             </div>
             <ul>
                 {tasks.map(({id, isDone, title}) => {
@@ -67,8 +80,13 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                         removeTask(id)
                     }
 
-                    return <li key={id}>
-                        <input type="checkbox" checked={isDone}/>
+                    const onChangeStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
+                        let newIsDoneValue = event.currentTarget.checked
+                        changeTaskStatus(id, newIsDoneValue)
+                    }
+
+                    return <li key={id} className={isDone ? 'is-done' : ''}>
+                        <input type="checkbox" checked={isDone} onChange={onChangeStatusHandler}/>
                         <span>{title}</span>
                         <button onClick={onClickHandler}>x
                         </button>
@@ -76,11 +94,12 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                 })}
             </ul>
             <div>
-                <button onClick={onFilterChangeAll}>All
+                <button onClick={onFilterChangeAll} className={filter === 'all' ? 'active-filter' : ''}>All
                 </button>
-                <button onClick={onFilterChangeActive}>Active
+                <button onClick={onFilterChangeActive} className={filter === 'active' ? 'active-filter' : ''}>Active
                 </button>
-                <button onClick={onFilterChangeCompleted}>Completed
+                <button onClick={onFilterChangeCompleted}
+                        className={filter === 'completed' ? 'active-filter' : ''}>Completed
                 </button>
             </div>
         </div>
