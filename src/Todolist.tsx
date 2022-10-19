@@ -1,5 +1,6 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent} from 'react';
 import {FilterValueType} from "./App";
+import {AddItemForm} from "./components/AddItemForm";
 
 
 export type TaskType = {
@@ -33,33 +34,13 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                                                           removeTodolist
                                                       }) => {
 
-    let [taskTitle, setTitle] = useState('')
-    let [error, setError] = useState<string | null>(null)
 
-    const onAddTask = () => {
-        setError(null)
-        if (taskTitle.trim() !== '') {
-            addTask(taskTitle, todolistId)
-            setTitle('')
-        } else {
-            setError('Title is required')
-        }
-
+    const onAddTask = (title: string) => {
+        addTask(title, todolistId)
     }
-
 
     const onDeleteClick = () => {
         removeTodolist(todolistId)
-    }
-
-    const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTitle(event.currentTarget.value)
-    }
-
-    const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            onAddTask()
-        }
     }
 
     const onFilterChangeAll = () => {
@@ -74,17 +55,12 @@ export const Todolist: React.FC<TodolistPropsType> = ({
 
     return (
         <div>
-            <div style = {{display:'flex', alignItems:'center'}}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
                 <h3>{title}</h3>
                 <button onClick={onDeleteClick}>x</button>
             </div>
             <div>
-                <input value={taskTitle} onChange={onChangeHandler}
-                       onKeyPress={onKeyPressHandler}
-                       className={error ? 'error' : ''}
-                />
-                <button onClick={onAddTask}>+</button>
-                {error && <div className='error-message'>{error}</div>}
+                <AddItemForm addItem={onAddTask}/>
             </div>
             <ul>
                 {tasks.map(({id, isDone, title}) => {
