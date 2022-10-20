@@ -77,7 +77,11 @@ function App() {
     }
 
     const changeTodolistTitle = (title:string,todolistId:string)=>{
-
+        const todolist = todolists.find(tl =>tl.id ===todolistId)
+            if(todolist){
+                todolist.title = title
+                setTodolists([...todolists])
+            }
     }
 
     const removeTodolist = (id: string) => {
@@ -120,6 +124,7 @@ function App() {
                     filter={filter}
                     removeTodolist={removeTodolist}
                     changeTaskTitle={changeTaskTitle}
+                    changeTodolistTitle={changeTodolistTitle}
                 />
             })}
 

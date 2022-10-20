@@ -20,7 +20,8 @@ type TodolistPropsType = {
     filter: string,
     todolistId: string,
     removeTodolist: (id: string) => void,
-    changeTaskTitle: (id: string, title: string, todolistId: string) => void
+    changeTaskTitle: (id: string, title: string, todolistId: string) => void,
+    changeTodolistTitle: (title: string, todolistId: string) => void
 }
 
 
@@ -34,7 +35,8 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                                                           filter,
                                                           todolistId,
                                                           removeTodolist,
-                                                          changeTaskTitle
+                                                          changeTaskTitle,
+                                                          changeTodolistTitle
                                                       }) => {
 
 
@@ -56,10 +58,14 @@ export const Todolist: React.FC<TodolistPropsType> = ({
         changeFilter('completed', todolistId)
     }
 
+    const setTodolistTitle = (newTitle: string) => {
+        changeTodolistTitle(newTitle,todolistId)
+    }
+
     return (
         <div>
             <div style={{display: 'flex', alignItems: 'center'}}>
-                <EditableSpan value={title} onChange={onAddTask}/>
+                <EditableSpan value={title} onChange={setTodolistTitle}/>
                 <button onClick={onDeleteClick}>x</button>
             </div>
             <div>
