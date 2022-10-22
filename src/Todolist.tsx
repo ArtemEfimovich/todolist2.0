@@ -2,6 +2,8 @@ import React, {ChangeEvent} from 'react';
 import {FilterValueType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
+import {IconButton} from "@mui/material";
+import {Delete} from "@mui/icons-material";
 
 
 export type TaskType = {
@@ -59,14 +61,14 @@ export const Todolist: React.FC<TodolistPropsType> = ({
     }
 
     const setTodolistTitle = (newTitle: string) => {
-        changeTodolistTitle(newTitle,todolistId)
+        changeTodolistTitle(newTitle, todolistId)
     }
 
     return (
         <div>
             <div style={{display: 'flex', alignItems: 'center'}}>
                 <EditableSpan value={title} onChange={setTodolistTitle}/>
-                <button onClick={onDeleteClick}>x</button>
+                <IconButton onClick={onDeleteClick}><Delete/></IconButton>
             </div>
             <div>
                 <AddItemForm addItem={onAddTask}/>
@@ -90,8 +92,8 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                     return <li key={id} className={isDone ? 'is-done' : ''}>
                         <input type="checkbox" checked={isDone} onChange={onChangeStatusHandler}/>
                         <EditableSpan value={title} onChange={onChangeTitleHandler}/>
-                        <button onClick={onClickHandler}>x
-                        </button>
+                        <IconButton onClick={onClickHandler}><Delete/>
+                        </IconButton>
                     </li>
                 })}
             </ul>
