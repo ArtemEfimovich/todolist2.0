@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useState} from 'react';
-import {Button} from "@mui/material";
+import {Button, IconButton, TextField} from "@mui/material";
+import {AddBox} from "@mui/icons-material";
 
 
 type AddItemFormPropsType = {
@@ -35,15 +36,20 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = ({addItem}) => {
 
     return (
         <div>
-            <input value={taskTitle} onChange={onChangeHandler}
-                   onKeyPress={onKeyPressHandler}
-                   className={error ? 'error' : ''}
+            <TextField
+                variant='outlined'
+                value={taskTitle} onChange={onChangeHandler}
+                onKeyPress={onKeyPressHandler}
+                error={!!error}
+                label={'Title'}
+                helperText={error}
             />
-            <Button variant='contained' color='primary' onClick={onAddTask}
-            style = {{maxWidth: '20px', maxHeight: '20px', minWidth: '20px', minHeight: '20px'}}
-            >+</Button>
-                {error && <div className='error-message'>{error}</div>}
+            <IconButton
+                color='primary'
+                onClick={onAddTask}>
+                <AddBox/>
+            </IconButton>
         </div>
-);
+    );
 };
 

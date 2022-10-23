@@ -2,7 +2,7 @@ import React, {ChangeEvent} from 'react';
 import {FilterValueType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
-import {IconButton} from "@mui/material";
+import {IconButton, Button, Checkbox} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 
 
@@ -73,7 +73,7 @@ export const Todolist: React.FC<TodolistPropsType> = ({
             <div>
                 <AddItemForm addItem={onAddTask}/>
             </div>
-            <ul>
+            <div>
                 {tasks.map(({id, isDone, title}) => {
 
                     const onChangeTitleHandler = (newTitle: string) => {
@@ -89,22 +89,30 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                         changeTaskStatus(id, newIsDoneValue, todolistId)
                     }
 
-                    return <li key={id} className={isDone ? 'is-done' : ''}>
-                        <input type="checkbox" checked={isDone} onChange={onChangeStatusHandler}/>
+                    return <div key={id} className={isDone ? 'is-done' : ''}>
+                        <Checkbox color="primary" checked={isDone} onChange={onChangeStatusHandler}/>
                         <EditableSpan value={title} onChange={onChangeTitleHandler}/>
                         <IconButton onClick={onClickHandler}><Delete/>
                         </IconButton>
-                    </li>
+                    </div>
                 })}
-            </ul>
+            </div>
             <div>
-                <button onClick={onFilterChangeAll} className={filter === 'all' ? 'active-filter' : ''}>All
-                </button>
-                <button onClick={onFilterChangeActive} className={filter === 'active' ? 'active-filter' : ''}>Active
-                </button>
-                <button onClick={onFilterChangeCompleted}
-                        className={filter === 'completed' ? 'active-filter' : ''}>Completed
-                </button>
+                <Button onClick={onFilterChangeAll}
+                        variant={filter === 'all' ? 'contained' : 'text'}
+                        color='inherit'
+                >All
+                </Button>
+                <Button onClick={onFilterChangeActive}
+                        variant={filter === 'active' ? 'contained' : 'text'}
+                        color='primary'
+                >Active
+                </Button>
+                <Button onClick={onFilterChangeCompleted}
+                        variant={filter === 'completed' ? 'contained' : 'text'}
+                        color='secondary'
+                >Completed
+                </Button>
             </div>
         </div>
     );
