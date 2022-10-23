@@ -40,8 +40,8 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = ({addItem}) => {
                    className={error ? 'error' : ''}
             />
             <Button variant='contained' color='primary' onClick={onAddTask}
-            style = {{maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px'}}
-            >x</Button>
+            style = {{maxWidth: '20px', maxHeight: '20px', minWidth: '20px', minHeight: '20px'}}
+            >+</Button>
                 {error && <div className='error-message'>{error}</div>}
         </div>
 );
