@@ -1,4 +1,4 @@
-import {FilterValueType, TasksStateType} from "./App";
+import {TasksStateType} from "./App";
 import {v1} from "uuid";
 
 
@@ -15,9 +15,10 @@ export type AddTaskActionType = {
 }
 
 export type ChangeTaskTitleActionType = {
-    type: 'CHANGE-TODOLIST-TITLE',
+    type: 'CHANGE-TASK-TITLE',
     id: string,
-    title: string
+    title: string,
+    todolistId:string
 }
 
 export type ChangeTaskStatusActionType = {
@@ -55,6 +56,14 @@ export const tasksReducer = (state: TasksStateType, action: ActionsType) => {
                 taskStatus.isDone = action.filter
             }
             return {...state}
+        case 'CHANGE-TASK-TITLE':
+            let copy = {...state}
+            let todolistTaskTitle = copy[action.todolistId]
+            let taskFind = todolistTaskTitle.find(task => task.id === action.id)
+            if(taskFind){
+                taskFind.title = action.title
+            }
+            return {...state}
         default:
             throw new Error("I don`t understand this type ")
     }
@@ -71,4 +80,8 @@ export const addTaskAC = (title: string, todolistId: string): AddTaskActionType 
 
 export const changeTaskStatusAC = (id: string, filter: boolean,todolistId: string): ChangeTaskStatusActionType => {
     return {type: 'CHANGE-TASK-STATUS', id, filter,todolistId}
+}
+
+export const changeTaskTitleAC=(id:string,title:string,todolistId:string):ChangeTaskTitleActionType=>{
+    return {type:'CHANGE-TASK-TITLE',id,title,todolistId}
 }
