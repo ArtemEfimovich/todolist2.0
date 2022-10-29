@@ -1,6 +1,7 @@
 import { todolistsReducer } from './todolists-reducer'
 import { v1 } from 'uuid'
-import {FilterValueType, TodolistsType} from "./App";
+import {FilterValueType, TasksStateType, TodolistsType} from "./App";
+import {addTodolistAC, tasksReducer} from "./tasks-reducer";
 
 
 test('correct todolist should be removed', () => {
@@ -29,7 +30,7 @@ test('correct todolist should be added', () => {
         {id: todolistId2, title: 'What to buy', filter: 'all'}
     ]
 
-    const endState = todolistsReducer(startState, {type: 'ADD-TODOLIST', title: newTodolistTitle})
+    const endState = todolistsReducer(startState, {type: 'ADD-TODOLIST', title: newTodolistTitle,todolistId:v1()})
 
     expect(endState.length).toBe(3)
     expect(endState[2].title).toBe(newTodolistTitle)
@@ -79,4 +80,21 @@ test('correct filter of todolist should be changed', () => {
 
     expect(endState[0].filter).toBe('all')
     expect(endState[1].filter).toBe(newFilter)
+})
+
+test('ids should be equals', () => {
+    const startTasksState: TasksStateType = {}
+    const startTodolistsState: Array<TodolistsType> = []
+
+    const action = addTodolistAC('new todolist')
+
+    const endTasksState = tasksReducer(startTasksState, action)
+    const endTodolistsState = todolistsReducer(startTodolistsState, action)
+
+    const keys = Object.keys(endTasksState)
+    const idFromTasks = keys[0]
+    const idFromTodolists = endTodolistsState[0].id
+
+    expect(idFromTasks).toBe(action.todolistId)
+    expect(idFromTodolists).toBe(action.todolistId)
 })
