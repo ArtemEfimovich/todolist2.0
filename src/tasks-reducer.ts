@@ -93,10 +93,3 @@ export const changeTaskTitleAC=(id:string,title:string,todolistId:string):Change
     return {type:'CHANGE-TASK-TITLE',id,title,todolistId}
 }
 
-export const addTodolistAC =(title:string):AddTodolistActionType=>{
-    return {type: 'ADD-TODOLIST',title,todolistId:v1()}
-}
-
-export const removeTodolistAC = (id:string):RemoveTodoListActionType=>{
-    return {type:'REMOVE-TODOLIST',id}
-}
