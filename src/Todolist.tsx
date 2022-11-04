@@ -16,7 +16,7 @@ type TodolistPropsType = {
     title: string,
     tasks: TaskType[],
     removeTask: (taskId: string, todolistId: string) => void,
-    changeFilter: (value: FilterValueType, todolistId: string) => void,
+    changeFilter: ( todolistId: string,filter: FilterValueType) => void,
     addTask: (taskTitle: string, todolistId: string) => void,
     changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void,
     filter: string,
@@ -51,13 +51,13 @@ export const Todolist: React.FC<TodolistPropsType> = ({
     }
 
     const onFilterChangeAll = () => {
-        changeFilter('all', todolistId)
+        changeFilter( todolistId,'all')
     }
     const onFilterChangeActive = () => {
-        changeFilter('active', todolistId)
+        changeFilter(todolistId,'active')
     }
     const onFilterChangeCompleted = () => {
-        changeFilter('completed', todolistId)
+        changeFilter(todolistId,'completed')
     }
 
     const setTodolistTitle = (newTitle: string) => {
