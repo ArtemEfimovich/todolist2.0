@@ -37,9 +37,9 @@ type ActionsType = RemoveTaskActionType |
 
 
 export const tasksReducer = (state: TasksStateType, action: ActionsType) => {
+    let stateCopy = {...state}
     switch (action.type) {
         case 'REMOVE-TASK':
-            let stateCopy = {...state}
             let todolistTask = stateCopy[action.todolistId]
             let newTask = todolistTask.filter(t => t.id !== action.taskId)
             stateCopy[action.todolistId] = newTask
@@ -50,29 +50,26 @@ export const tasksReducer = (state: TasksStateType, action: ActionsType) => {
             state[action.todolistId] = [task, ...todolistTasks]
             return state
         case  'CHANGE-TASK-STATUS':
-            let stateCopys = {...state}
-            let todolistTaskStatus = stateCopys[action.todolistId]
+            let todolistTaskStatus = stateCopy[action.todolistId]
             let taskStatus = todolistTaskStatus.find(task => task.id === action.id)
             if(taskStatus){
                 taskStatus.isDone = action.filter
             }
-            return {...state}
+            return stateCopy
         case 'CHANGE-TASK-TITLE':
-            let copy = {...state}
-            let todolistTaskTitle = copy[action.todolistId]
+            let todolistTaskTitle = stateCopy[action.todolistId]
             let taskFind = todolistTaskTitle.find(task => task.id === action.id)
             if(taskFind){
                 taskFind.title = action.title
             }
-            return {...state}
+            return stateCopy
         case 'ADD-TODOLIST':
-            return {...state,[action.todolistId]:[]}
+            return {stateCopy,[action.todolistId]:[]}
         case 'REMOVE-TODOLIST':
-            let deleteCopyState = {...state}
-            delete deleteCopyState[action.id]
-            return deleteCopyState
+            delete stateCopy[action.id]
+            return stateCopy
         default:
-            throw new Error("I don`t understand this type ")
+           return state
     }
 }
 

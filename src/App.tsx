@@ -40,10 +40,10 @@ function App() {
         ]
     })
 
-    const changeFilter = (value: FilterValueType, todolistId: string) => {
+    const changeFilter = (todolistId: string,filter: FilterValueType ) => {
         let todolistFilter = todolists.find(tl => tl.id === todolistId)
         if (todolistFilter) {
-            todolistFilter.filter = value
+            todolistFilter.filter = filter
             setTodolists([...todolists])
         }
     }
