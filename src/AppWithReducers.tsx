@@ -1,20 +1,7 @@
-import React, {useReducer} from 'react';
+import React from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
-import {v1} from "uuid";
-import {AddItemForm} from "./components/AddItemForm";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Typography} from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
-import {
-    addTodolistAC,
-    changeTodolistFilterAC,
-    changeTodolistTitleAC,
-    removeTodolistAC,
-    todolistsReducer
-} from "./todolists-reducer";
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './tasks-reducer';
 
+/*
 export type FilterValueType = 'all' | 'completed' | 'active'
 export type TodolistsType = {
     id: string,
@@ -25,11 +12,13 @@ export type TodolistsType = {
 export type TasksStateType = {
     [key: string]: TaskType[]
 }
+*/
 
 
+/*
 function AppWithReducers() {
 
-    let todolistID1 = v1()
+    /!*let todolistID1 = v1()
     let todolistID2 = v1()
 
     let [todolists, dispatchToTodolist] = useReducer(todolistsReducer, [
@@ -143,7 +132,7 @@ function AppWithReducers() {
 
         </div>
     )
-        ;
+        ;*!/
 }
 
-export default AppWithReducers;
+*/
