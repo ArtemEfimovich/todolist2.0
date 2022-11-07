@@ -1,9 +1,10 @@
-import React, {ChangeEvent} from 'react';
+import React, {useCallback} from 'react';
 import {FilterValueType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
-import {IconButton, Button, Checkbox} from "@mui/material";
+import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
+import {Task} from "./task/Task";
 
 
 export type TaskType = {
@@ -16,7 +17,7 @@ type TodolistPropsType = {
     title: string,
     tasks: TaskType[],
     removeTask: (taskId: string, todolistId: string) => void,
-    changeFilter: ( todolistId: string,filter: FilterValueType) => void,
+    changeFilter: (todolistId: string, filter: FilterValueType) => void,
     addTask: (taskTitle: string, todolistId: string) => void,
     changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void,
     filter: string,
@@ -27,41 +28,48 @@ type TodolistPropsType = {
 }
 
 
-export const Todolist: React.FC<TodolistPropsType> = ({
-                                                          title,
-                                                          tasks,
-                                                          removeTask,
-                                                          changeFilter,
-                                                          addTask,
-                                                          changeTaskStatus,
-                                                          filter,
-                                                          todolistId,
-                                                          removeTodolist,
-                                                          changeTaskTitle,
-                                                          changeTodolistTitle
-                                                      }) => {
+export const Todolist: React.FC<TodolistPropsType> = React.memo(({
+                                                                     title,
+                                                                     tasks,
+                                                                     removeTask,
+                                                                     changeFilter,
+                                                                     addTask,
+                                                                     changeTaskStatus,
+                                                                     filter,
+                                                                     todolistId,
+                                                                     removeTodolist,
+                                                                     changeTaskTitle,
+                                                                     changeTodolistTitle
+                                                                 }) => {
 
 
-    const onAddTask = (title: string) => {
+    const onAddTask = useCallback((title: string) => {
         addTask(title, todolistId)
-    }
+    }, [addTask, todolistId])
 
     const onDeleteClick = () => {
         removeTodolist(todolistId)
     }
-
-    const onFilterChangeAll = () => {
-        changeFilter( todolistId,'all')
-    }
-    const onFilterChangeActive = () => {
-        changeFilter(todolistId,'active')
-    }
-    const onFilterChangeCompleted = () => {
-        changeFilter(todolistId,'completed')
-    }
-
+    const onFilterChangeAll = useCallback(() => {
+        changeFilter(todolistId, 'all')
+    }, [changeFilter, todolistId])
+    const onFilterChangeActive = useCallback(() => {
+        changeFilter(todolistId, 'active')
+    }, [changeFilter, todolistId])
+    const onFilterChangeCompleted = useCallback(() => {
+        changeFilter(todolistId, 'completed')
+    }, [changeFilter, todolistId])
     const setTodolistTitle = (newTitle: string) => {
         changeTodolistTitle(newTitle, todolistId)
+    }
+
+    let tasksForTodolist = tasks
+
+    if (filter === 'active') {
+        tasksForTodolist = tasks.filter(t => t.isDone === false)
+    }
+    if (filter === 'completed') {
+        tasksForTodolist = tasks.filter(t => t.isDone === true)
     }
 
     return (
@@ -74,28 +82,14 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                 <AddItemForm addItem={onAddTask}/>
             </div>
             <div>
-                {tasks.map(({id, isDone, title}) => {
-
-                    const onChangeTitleHandler = (newTitle: string) => {
-                        changeTaskTitle(id, newTitle, todolistId)
-                    }
-
-                    const onClickHandler = () => {
-                        removeTask(id, todolistId)
-                    }
-
-                    const onChangeStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
-                        let newIsDoneValue = event.currentTarget.checked
-                        changeTaskStatus(id, newIsDoneValue, todolistId)
-                    }
-
-                    return <div key={id} className={isDone ? 'is-done' : ''}>
-                        <Checkbox color="primary" checked={isDone} onChange={onChangeStatusHandler}/>
-                        <EditableSpan value={title} onChange={onChangeTitleHandler}/>
-                        <IconButton onClick={onClickHandler}><Delete/>
-                        </IconButton>
-                    </div>
-                })}
+                {tasksForTodolist.map(t => <Task key={t.id}
+                                                 task={t}
+                                                 todolistId={todolistId}
+                                                 changeTaskStatus={changeTaskStatus}
+                                                 changeTaskTitle={changeTaskTitle}
+                                                 removeTask={removeTask}
+                    />
+                )}
             </div>
             <div>
                 <Button onClick={onFilterChangeAll}
@@ -116,5 +110,5 @@ export const Todolist: React.FC<TodolistPropsType> = ({
             </div>
         </div>
     );
-};
+});
 
