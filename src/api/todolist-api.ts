@@ -13,6 +13,7 @@ type TodolistType = {
     addedDate: string
     order: number
     title: string
+    filter: string
 }
 type ResponseType<D> = {
     resultCode: number

@@ -1,6 +1,8 @@
 import {TasksStateType, TodolistsType} from "./App";
 import {v1} from "uuid";
 import {AddTodolistActionType, RemoveTodoListActionType} from "./todolists-reducer";
+import {todolistAPI} from "./api/todolist-api";
+import {Dispatch} from "react";
 
 
 export type  RemoveTaskActionType = {
@@ -114,3 +116,11 @@ export const changeTaskTitleAC = (id: string, title: string, todolistId: string)
     return {type: 'CHANGE-TASK-TITLE', id, title, todolistId}
 }
 
+
+
+export const fetchTodolistsThunk = (dispatch:Dispatch<any>)=>{
+    todolistAPI.getTodolist()
+        .then((res)=>{
+            return dispatch(setTodolistsAC(res.data));
+        })
+}
