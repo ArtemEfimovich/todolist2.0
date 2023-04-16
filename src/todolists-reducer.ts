@@ -1,5 +1,11 @@
 import {FilterValueType, TodolistsType} from "./App";
 import {v1} from "uuid";
+import {todolistAPI} from "./api/todolist-api";
+import {AppRootStateType, DispatchType} from "./state/store";
+import {Dispatch} from "redux";
+import {AxiosError} from "axios";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 
 export type  RemoveTodoListActionType = {
@@ -25,11 +31,16 @@ export type ChangeTodolistFilterActionType = {
     filter: FilterValueType
 }
 
+export type SetTodolistsActionType = {
+    type: 'SET-TODOLISTS'
+    todolists:  TodolistsType[]
+}
 
 type ActionsType = RemoveTodoListActionType |
     AddTodolistActionType |
     ChangeTodolistTitleActionType |
-    ChangeTodolistFilterActionType
+    ChangeTodolistFilterActionType|
+    SetTodolistsActionType
 
 
 const initialState: TodolistsType[] = []
@@ -53,12 +64,20 @@ export const todolistsReducer = (state: TodolistsType[]=initialState, action: Ac
                 todolistFilter.filter = action.filter
             }
             return [...state]
+        case'SET-TODOLISTS': {
+            return action.todolists.map((tl)=>{
+                return {...tl,filter:'all'}
+            })
+        }
         default:
             return state
     }
 }
 
 
+export const setTodolistsAC = (todolists:  TodolistsType[]): SetTodolistsActionType => {
+    return {type: 'SET-TODOLISTS', todolists}
+}
 export const addTodolistAC = (title: string): AddTodolistActionType => {
     return {type: 'ADD-TODOLIST', title, todolistId: v1()}
 }
@@ -72,4 +91,15 @@ export const changeTodolistTitleAC = (id: string, title: string): ChangeTodolist
 }
 export const changeTodolistFilterAC = (id: string, filter: FilterValueType): ChangeTodolistFilterActionType => {
     return {type: 'CHANGE-TODOLIST-FILTER', id: id, filter: filter}
+}
+
+
+export const fetchTodolistsThunk = (dispatch:DispatchType):void=>{
+    todolistAPI.getTodolists()
+        .then((res)=>{
+            dispatch(setTodolistsAC(res.data))
+        })
+        .catch((error:AxiosError)=>{
+
+        })
 }
