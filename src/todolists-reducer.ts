@@ -94,7 +94,7 @@ export const changeTodolistFilterAC = (id: string, filter: FilterValueType): Cha
 }
 
 
-export const fetchTodolistsThunk = (dispatch:DispatchType):void=>{
+export const fetchTodolistsThunk = (dispatch:DispatchType<any>):void=>{
     todolistAPI.getTodolists()
         .then((res)=>{
             dispatch(setTodolistsAC(res.data))

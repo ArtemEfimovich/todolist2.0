@@ -6,7 +6,6 @@ import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {Task} from "./task/Task";
 import {fetchTasksTC} from "./tasks-reducer";
-import {useDispatch} from "react-redux";
 import {useAppDispatch} from "./state/store";
 
 
