@@ -61,8 +61,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         case 'ADD-TASK': {
             const stateCopy = {...state}
             const tasks = stateCopy[action.task.todoListId]
-            const newTask = [action.task,...tasks]
-            stateCopy[action.task.todoListId] = newTask
+            stateCopy[action.task.todoListId] = [action.task,...tasks]
             return stateCopy
         }
         case  'CHANGE-TASK-STATUS': {
@@ -81,7 +80,7 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
         }
         case 'ADD-TODOLIST': {
             let stateCopy = {...state}
-            return {stateCopy, [action.todolistId]: []}
+            return {stateCopy, [action.todolist.id]: []}
         }
         case 'REMOVE-TODOLIST': {
             let stateCopy = {...state}
@@ -140,5 +139,13 @@ export const createTaskTC = (todolistId : string,title:string)=>(dispatch : Disp
     todolistAPI.createTask(todolistId,title)
         .then((res)=>{
             dispatch(addTaskAC(res.data.data.item))
+        })
+}
+
+
+export const removeTaskTC = (taskId:string,todolistId:string)=>(dispatch : DispatchType<any>)=> {
+    todolistAPI.deleteTask(todolistId,taskId)
+        .then(()=>{
+            dispatch(removeTaskAC(taskId,todolistId))
         })
 }

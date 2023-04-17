@@ -1,11 +1,9 @@
 import {FilterValueType, TodolistsType} from "./App";
-import {v1} from "uuid";
 import {todolistAPI} from "./api/todolist-api";
-import {AppRootStateType, DispatchType} from "./state/store";
-import {Dispatch} from "redux";
-import {AxiosError} from "axios";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
+import {DispatchType} from "./state/store";
+
+
+
 
 
 export type  RemoveTodoListActionType = {
@@ -15,8 +13,7 @@ export type  RemoveTodoListActionType = {
 
 export type AddTodolistActionType = {
     type: 'ADD-TODOLIST',
-    title: string,
-    todolistId: string
+    todolist:TodolistsType
 }
 
 export type ChangeTodolistTitleActionType = {
@@ -49,9 +46,10 @@ export const todolistsReducer = (state: TodolistsType[]=initialState, action: Ac
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(tl => tl.id !== action.id)
-        case 'ADD-TODOLIST':
-            let newTodolist: TodolistsType = {id: action.todolistId, title: action.title, filter: 'all'}
-            return [...state, newTodolist]
+        case 'ADD-TODOLIST':{
+            const stateCopy = {...state}
+            return [stateCopy,{...action.todolist, filter:'all'}]
+        }
         case 'CHANGE-TODOLIST-TITLE':
             const todolist = state.find(tl => tl.id === action.id)
             if (todolist) {
@@ -78,8 +76,8 @@ export const todolistsReducer = (state: TodolistsType[]=initialState, action: Ac
 export const setTodolistsAC = (todolists:  TodolistsType[]): SetTodolistsActionType => {
     return {type: 'SET-TODOLISTS', todolists}
 }
-export const addTodolistAC = (title: string): AddTodolistActionType => {
-    return {type: 'ADD-TODOLIST', title, todolistId: v1()}
+export const addTodolistAC = (todolist:TodolistsType): AddTodolistActionType => {
+    return {type: 'ADD-TODOLIST', todolist}
 }
 
 export const removeTodolistAC = (id: string): RemoveTodoListActionType => {
@@ -99,7 +97,27 @@ export const fetchTodolistsThunk = (dispatch:DispatchType<any>):void=>{
         .then((res)=>{
             dispatch(setTodolistsAC(res.data))
         })
-        .catch((error:AxiosError)=>{
+        .catch(()=>{
+        })
+}
 
+export const addTodolistTC = (title:string)=>(dispatch : DispatchType<any>)=>{
+      todolistAPI.createTodolist(title)
+        .then((res) => {
+             dispatch(addTodolistAC(res.data.data.item))
+        })
+}
+
+export const removeTodolistTC = (todolistId:string)=>(dispatch : DispatchType<any>)=>{
+    todolistAPI.deleteTodolist(todolistId)
+        .then(()=>{
+            dispatch(removeTodolistAC(todolistId))
+        })
+}
+
+export const changeTodolistTitleTC = (title:string,todolistId:string)=>(dispatch:DispatchType<any>)=>{
+    todolistAPI.updateTodolist(todolistId,title)
+        .then(()=>{
+            dispatch(changeTodolistTitleAC(todolistId,title))
         })
 }

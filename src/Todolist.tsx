@@ -48,7 +48,7 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
 
         useEffect(()=>{
             dispatch(fetchTasksTC(todolistId))
-        },[])
+        },[dispatch,todolistId])
 
 
     const onAddTask = useCallback((title: string) => {
@@ -90,7 +90,7 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
                 <AddItemForm addItem={onAddTask}/>
             </div>
             <div>
-                {tasksForTodolist.map(t => <Task key={t.id}
+                {tasksForTodolist && tasksForTodolist.map(t => <Task key={t.id}
                                                  task={t}
                                                  todolistId={todolistId}
                                                  changeTaskStatus={changeTaskStatus}

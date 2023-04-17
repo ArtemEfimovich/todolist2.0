@@ -58,14 +58,12 @@ type GetTasksResponse = {
     totalCount: number
     items: TaskTypes[]
 }
-
 export type LoginParamsType={
     email: string
     password: string
     rememberMe: boolean
     captcha?: string
 }
-
 export type AuthMeType={
     id:number
     email:string
@@ -75,8 +73,7 @@ export type AuthMeType={
 
 export const authAPI = {
     login(data: LoginParamsType) {
-        const promise = instance.post<ResponseType<{userId: number}>>('auth/login',data)
-        return promise
+        return instance.post<ResponseType<{userId: number}>>('auth/login',data)
     },
     me(){
         return instance.get<ResponseType<AuthMeType>>('auth/me')
@@ -121,13 +118,13 @@ export const todolistAPI = {
         )
     },
     updateTask(todolistId:string,taskId:string,title:string){
-        instance.post<UpdateTaskModelType>(
+       return instance.post<UpdateTaskModelType>(
             `/todo-lists/${todolistId}/tasks/${taskId}`,
             {title}
         )
     },
     deleteTask(todolistId:string,taskId:string){
-        instance.delete<ResponseType<{}>>(
+        return instance.delete<ResponseType<{}>>(
             `/todo-lists/${todolistId}/tasks/${taskId}`
         )
     }
