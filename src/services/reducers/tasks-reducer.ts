@@ -9,7 +9,8 @@ import {
     RemoveTaskActionType, setTasksAC, SetTasksActionType
 } from "../actions/task-actions";
 import {AddTodolistActionType, RemoveTodoListActionType, SetTodolistsActionType} from "../actions/todolists-actions";
-import {appSetStatusAC} from "./app-reducer";
+import {appSetErrorAC, appSetStatusAC} from "./app-reducer";
+import {AxiosError} from "axios";
 
 
  type ActionsType = RemoveTaskActionType |
@@ -85,13 +86,29 @@ export const fetchTasksTC = (todolistId: string) => (dispatch: DispatchType<any>
             dispatch(setTasksAC(tasks, todolistId))
             dispatch(appSetStatusAC('succeeded'))
         })
+        .catch((error:AxiosError)=>{
+            dispatch(appSetErrorAC(error.message))
+        })
 }
 export const createTaskTC = (todolistId: string, title: string) => (dispatch: DispatchType<any>) => {
     dispatch(appSetStatusAC('loading'))
     todolistAPI.createTask(todolistId, title)
         .then((res) => {
-            dispatch(addTaskAC(res.data.data.item))
-            dispatch(appSetStatusAC('succeeded'))
+            if (res.data.resultCode === 0) {
+                const task = res.data.data.item
+                dispatch(addTaskAC(task))
+                dispatch(appSetStatusAC('succeeded'))
+            } else {
+                if (res.data.messages.length) {
+                    dispatch(appSetErrorAC(res.data.messages[0]))
+                } else {
+                    dispatch(appSetErrorAC('Some error occurred'))
+                }
+                dispatch(appSetStatusAC('failed'))
+            }
+        })
+        .catch((error:AxiosError)=>{
+            dispatch(appSetErrorAC(error.message))
         })
 }
 export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: DispatchType<any>) => {
@@ -100,7 +117,10 @@ export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: D
         .then(() => {
             dispatch(removeTaskAC(taskId, todolistId))
             dispatch(appSetStatusAC('succeeded'))
-        })
+        }).catch((error:AxiosError)=>{
+        dispatch(appSetErrorAC(error.message))
+    })
+
 }
 
 export const updateTaskTitleTC = (id: string, title: string, todolistId: string) => (dispatch : DispatchType<any>,getState:()=>AppRootStateType) => {
@@ -121,6 +141,9 @@ export const updateTaskTitleTC = (id: string, title: string, todolistId: string)
                 .then(()=>{
                         dispatch(changeTaskTitleAC(id,title,todolistId))
                     dispatch(appSetStatusAC('succeeded'))
+                })
+                .catch((error:AxiosError)=>{
+                    dispatch(appSetErrorAC(error.message))
                 })
         }
 }
@@ -143,6 +166,9 @@ export const updateTaskStatusTC = (id:string,status: TaskStatuses,todolistId : s
                 .then(()=>{
                     dispatch(changeTaskStatusAC(id,status,todolistId))
                     dispatch(appSetStatusAC('succeeded'))
+                })
+                .catch((error:AxiosError)=>{
+                    dispatch(appSetErrorAC(error.message))
                 })
         }
 }

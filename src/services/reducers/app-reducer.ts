@@ -11,7 +11,7 @@ type InitialStateType = typeof initialState
 
 const initialState = {
     status: 'loading' as RequestStatusType,
-    error: 'null' as null | string
+    error: null as null | string
 }
 
 export const appReducer = (state: InitialStateType = initialState,action: ActionType):InitialStateType=>{

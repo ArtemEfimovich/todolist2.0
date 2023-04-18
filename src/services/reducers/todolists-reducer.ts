@@ -7,7 +7,8 @@ import {
     ChangeTodolistTitleActionType, removeTodolistAC,
     RemoveTodoListActionType, setTodolistsAC, SetTodolistsActionType
 } from "../actions/todolists-actions";
-import {appSetStatusAC} from "./app-reducer";
+import {appSetErrorAC, appSetStatusAC} from "./app-reducer";
+import {AxiosError} from "axios";
 
 
 type ActionsType = RemoveTodoListActionType |
@@ -57,7 +58,8 @@ export const fetchTodolistsTC =()=> (dispatch:DispatchType<any>):void=>{
             dispatch(setTodolistsAC(res.data))
             dispatch(appSetStatusAC('succeeded'))
         })
-        .catch(()=>{
+        .catch((error:AxiosError)=>{
+            dispatch(appSetErrorAC(error.message))
         })
 }
 
@@ -65,9 +67,21 @@ export const addTodolistTC = (title:string)=>(dispatch : DispatchType<any>)=>{
     dispatch(appSetStatusAC('loading'))
       todolistAPI.createTodolist(title)
         .then((res) => {
+            if(res.data.resultCode === 0){
              dispatch(addTodolistAC(res.data.data.item))
-            dispatch(appSetStatusAC('succeeded'))
+            dispatch(appSetStatusAC('succeeded'))}
+            else{
+                if (res.data.messages.length) {
+                dispatch(appSetErrorAC(res.data.messages[0]))
+            } else {
+                dispatch(appSetErrorAC('Some error occurred'))
+            }
+                dispatch(appSetStatusAC('failed'))
+            }
         })
+          .catch((error:AxiosError)=>{
+              dispatch(appSetErrorAC(error.message))
+          })
 }
 
 export const removeTodolistTC = (todolistId:string)=>(dispatch : DispatchType<any>)=>{
@@ -77,6 +91,9 @@ export const removeTodolistTC = (todolistId:string)=>(dispatch : DispatchType<an
             dispatch(removeTodolistAC(todolistId))
             dispatch(appSetStatusAC('succeeded'))
         })
+        .catch((error:AxiosError)=>{
+            dispatch(appSetErrorAC(error.message))
+        })
 }
 
 export const changeTodolistTitleTC = (title:string,todolistId:string)=>(dispatch:DispatchType<any>)=>{
@@ -85,5 +102,8 @@ export const changeTodolistTitleTC = (title:string,todolistId:string)=>(dispatch
         .then(()=>{
             dispatch(changeTodolistTitleAC(todolistId,title))
             dispatch(appSetStatusAC('succeeded'))
+        })
+        .catch((error:AxiosError)=>{
+            dispatch(appSetErrorAC(error.message))
         })
 }
