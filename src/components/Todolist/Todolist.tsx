@@ -1,12 +1,13 @@
 import React, {useCallback, useEffect} from 'react';
-import {FilterValueType} from "./App";
-import {AddItemForm} from "./components/AddItemForm";
-import {EditableSpan} from "./components/EditableSpan";
+import {AddItemForm} from "../AddItemForm/AddItemForm";
+import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
-import {Task} from "./task/Task";
-import {fetchTasksTC} from "./tasks-reducer";
-import {useAppDispatch} from "./state/store";
+import {Task} from "../Task/Task";
+import {fetchTasksTC} from "../../services/reducers/tasks-reducer";
+import {useAppDispatch} from "../../services/store/store";
+import {TaskStatuses, TaskTypes} from "../../middleware/todolist-api";
+import {FilterValueType} from "../../pages/AppWithRedux";
 
 
 export type TaskType = {
@@ -17,11 +18,11 @@ export type TaskType = {
 
 type TodolistPropsType = {
     title: string,
-    tasks: TaskType[],
+    tasks: TaskTypes[],
     removeTask: (taskId: string, todolistId: string) => void,
     changeFilter: (todolistId: string, filter: FilterValueType) => void,
     addTask: (taskTitle: string, todolistId: string) => void,
-    changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void,
+    changeTaskStatus: (id: string, status: TaskStatuses, todolistId: string) => void,
     filter: string,
     todolistId: string,
     removeTodolist: (id: string) => void,
@@ -74,10 +75,10 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
     let tasksForTodolist = tasks
 
     if (filter === 'active') {
-        tasksForTodolist = tasks.filter(t => t.isDone === false)
+        tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.New)
     }
     if (filter === 'completed') {
-        tasksForTodolist = tasks.filter(t => t.isDone === true)
+        tasksForTodolist = tasks.filter(t => t.status === TaskStatuses.Completed)
     }
 
     return (

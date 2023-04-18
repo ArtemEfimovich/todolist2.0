@@ -117,10 +117,10 @@ export const todolistAPI = {
             {title}
         )
     },
-    updateTask(todolistId:string,taskId:string,title:string){
-       return instance.post<UpdateTaskModelType>(
+    updateTask(todolistId:string,taskId:string,model:UpdateTaskModelType){
+       return instance.put<UpdateTaskModelType>(
             `/todo-lists/${todolistId}/tasks/${taskId}`,
-            {title}
+            model
         )
     },
     deleteTask(todolistId:string,taskId:string){
