@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../assets/styles/index.css';
-import * as serviceWorker from './serviceWorker';
-import AppWithRedux from "./AppWithRedux";
+import './assets/styles/index.css';
+import AppWithRedux from "./pages/AppWithRedux";
 import {Provider} from "react-redux";
-import {store} from "../services/store/store";
+import {store} from "./services/store/store";
 
 ReactDOM.render(
     <Provider store={store}>
@@ -12,4 +11,4 @@ ReactDOM.render(
     </Provider>
     , document.getElementById('root'));
 
-serviceWorker.unregister();
+

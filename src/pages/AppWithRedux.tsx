@@ -2,23 +2,22 @@ import React, {useCallback, useEffect} from 'react';
 import '../assets/styles/App.css';
 import {Todolist} from "../components/Todolist/Todolist";
 import {AddItemForm} from "../components/AddItemForm/AddItemForm";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Typography} from "@mui/material";
+import {AppBar, Button, Container, Grid, IconButton, LinearProgress, Paper, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import {
     addTodolistTC,
-    changeTodolistFilterAC,
-    changeTodolistTitleTC,
-    fetchTodolistsThunk,
+    changeTodolistTitleTC, fetchTodolistsTC,
     removeTodolistTC
 } from "../services/reducers/todolists-reducer";
 import {
     createTaskTC,
     removeTaskTC, updateTaskStatusTC, updateTaskTitleTC
 } from '../services/reducers/tasks-reducer';
-import {useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch} from "../services/store/store";
+import {useAppDispatch, useAppSelector} from "../services/store/store";
 import {TaskStatuses, TaskTypes} from "../middleware/todolist-api";
+import {changeTodolistFilterAC} from "../services/actions/todolists-actions";
+import {RequestStatusType} from "../services/reducers/app-reducer";
 
 export type FilterValueType = 'all' | 'completed' | 'active'
 export type TodolistsType = {
@@ -33,18 +32,15 @@ export type TasksStateType = {
 
 
 function AppWithRedux() {
-
-
-    useEffect(()=>{
-        dispatch(fetchTodolistsThunk)
-    },[])
-
-    const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-    const todolists = useSelector<AppRootStateType, TodolistsType[]>(state => state.todolists)
-
     const dispatch = useAppDispatch()
 
+    useEffect(()=>{
+        dispatch(fetchTodolistsTC())
+    },[])
 
+    const tasks = useAppSelector< TasksStateType>(state => state.tasks)
+    const todolists = useAppSelector< TodolistsType[]>(state => state.todolists)
+    const status = useAppSelector<RequestStatusType>(state => state.app.status )
 
 
 
@@ -99,6 +95,7 @@ function AppWithRedux() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+                {status === 'loading' && <LinearProgress/> }
             </AppBar>
             <Container>
                 <Grid container style={{padding: '20px'}}><AddItemForm addItem={addTodolist}/></Grid>

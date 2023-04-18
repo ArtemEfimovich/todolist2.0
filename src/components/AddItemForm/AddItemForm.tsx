@@ -42,7 +42,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> =React.memo( ({addItem}
             <TextField
                 variant='outlined'
                 value={taskTitle} onChange={onChangeHandler}
-                onKeyPress={onKeyPressHandler}
+                onKeyDown={onKeyPressHandler}
                 error={!!error}
                 label={'Title'}
                 helperText={error}
