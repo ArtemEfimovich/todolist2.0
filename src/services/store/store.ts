@@ -5,13 +5,15 @@ import thunk, {ThunkDispatch} from "redux-thunk";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {configureStore} from "@reduxjs/toolkit";
 import {appReducer} from "../reducers/app-reducer";
+import {authReducer} from "../reducers/auth-reducer";
 
 
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
     todolists: todolistsReducer,
-    app: appReducer
+    app: appReducer,
+    auth: authReducer
 })
 
 export const store = configureStore({

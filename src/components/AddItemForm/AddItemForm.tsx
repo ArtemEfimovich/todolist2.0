@@ -3,14 +3,13 @@ import {IconButton, TextField} from "@mui/material";
 import {AddBox} from "@mui/icons-material";
 
 
-
 type AddItemFormPropsType = {
     addItem: (title: string) => void
-    disabled?:boolean
+    disabled?: boolean
 }
 
 
-export const AddItemForm: React.FC<AddItemFormPropsType> =React.memo( ({addItem,disabled}) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = React.memo(({addItem, disabled}) => {
 
     let [taskTitle, setTitle] = useState('')
     let [error, setError] = useState<string | null>(null)
@@ -27,7 +26,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> =React.memo( ({addItem,
     }
 
     const onKeyPressHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if(error !== null){
+        if (error !== null) {
             setError(null)
         }
         if (event.key === 'Enter') {
