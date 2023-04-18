@@ -18,6 +18,7 @@ import {useAppDispatch, useAppSelector} from "../services/store/store";
 import {TaskStatuses, TaskTypes} from "../middleware/todolist-api";
 import {changeTodolistFilterAC} from "../services/actions/todolists-actions";
 import {RequestStatusType} from "../services/reducers/app-reducer";
+import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 
 export type FilterValueType = 'all' | 'completed' | 'active'
 export type TodolistsType = {
@@ -40,7 +41,8 @@ function AppWithRedux() {
 
     const tasks = useAppSelector< TasksStateType>(state => state.tasks)
     const todolists = useAppSelector< TodolistsType[]>(state => state.todolists)
-    const status = useAppSelector<RequestStatusType>(state => state.app.status )
+    const status = useAppSelector<RequestStatusType>(state => state.app.status)
+
 
 
 
@@ -80,6 +82,7 @@ function AppWithRedux() {
     return (
         <div className="App">
             <AppBar position="static">
+                <ErrorSnackbar />
                 <Toolbar>
                     <IconButton
                         size="large"
