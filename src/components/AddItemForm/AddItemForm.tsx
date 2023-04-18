@@ -3,12 +3,14 @@ import {IconButton, TextField} from "@mui/material";
 import {AddBox} from "@mui/icons-material";
 
 
+
 type AddItemFormPropsType = {
     addItem: (title: string) => void
+    disabled?:boolean
 }
 
 
-export const AddItemForm: React.FC<AddItemFormPropsType> =React.memo( ({addItem}) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> =React.memo( ({addItem,disabled}) => {
 
     let [taskTitle, setTitle] = useState('')
     let [error, setError] = useState<string | null>(null)
@@ -49,7 +51,9 @@ export const AddItemForm: React.FC<AddItemFormPropsType> =React.memo( ({addItem}
             />
             <IconButton
                 color='primary'
-                onClick={onAddTask}>
+                onClick={onAddTask}
+                disabled={disabled}
+            >
                 <AddBox/>
             </IconButton>
         </div>

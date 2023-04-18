@@ -8,14 +8,14 @@ const instance = axios.create({
     },
 })
 
-type TodolistType = {
+export type TodolistType = {
     id: string
     addedDate: string
     order: number
     title: string
     filter: string
 }
-type ResponseType<D> = {
+export type ResponseType<D> = {
     resultCode: number
     messages: Array<string>
     fieldsErrors: Array<string>
@@ -118,7 +118,7 @@ export const todolistAPI = {
         )
     },
     updateTask(todolistId:string,taskId:string,model:UpdateTaskModelType){
-       return instance.put<UpdateTaskModelType>(
+       return instance.put<ResponseType<{}>>(
             `/todo-lists/${todolistId}/tasks/${taskId}`,
             model
         )

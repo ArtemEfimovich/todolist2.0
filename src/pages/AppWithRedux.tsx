@@ -7,8 +7,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import {
     addTodolistTC,
-    changeTodolistTitleTC, fetchTodolistsTC,
-    removeTodolistTC
+    changeTodolistTitleTC, fetchTodolistsTC, FilterValuesType,
+    removeTodolistTC, TodolistDomainType
 } from "../services/reducers/todolists-reducer";
 import {
     createTaskTC,
@@ -20,17 +20,10 @@ import {changeTodolistFilterAC} from "../services/actions/todolists-actions";
 import {RequestStatusType} from "../services/reducers/app-reducer";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 
-export type FilterValueType = 'all' | 'completed' | 'active'
-export type TodolistsType = {
-    id: string,
-    title: string,
-    filter: string
-}
 
 export type TasksStateType = {
     [key: string]: TaskTypes[]
 }
-
 
 function AppWithRedux() {
     const dispatch = useAppDispatch()
@@ -40,13 +33,13 @@ function AppWithRedux() {
     },[])
 
     const tasks = useAppSelector< TasksStateType>(state => state.tasks)
-    const todolists = useAppSelector< TodolistsType[]>(state => state.todolists)
+    const todolists = useAppSelector< TodolistDomainType[]>(state => state.todolists)
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
 
 
 
 
-    const changeFilter = useCallback((todolistId: string, filter: FilterValueType) => {
+    const changeFilter = useCallback((todolistId: string, filter: FilterValuesType) => {
         dispatch(changeTodolistFilterAC(todolistId, filter))
     }, [dispatch])
 
@@ -101,8 +94,8 @@ function AppWithRedux() {
                 {status === 'loading' && <LinearProgress/> }
             </AppBar>
             <Container>
-                <Grid container style={{padding: '20px'}}><AddItemForm addItem={addTodolist}/></Grid>
-                <Grid container spacing={3}>  {todolists.map(({filter, title, id}) => {
+                <Grid container style={{padding: '20px'}}><AddItemForm addItem={addTodolist} /></Grid>
+                <Grid container spacing={3}>  {todolists.map(({filter, title, id,entityStatus}) => {
                     let tasksForTodolist = tasks[id]
                     return <Grid item key={id}>
                         <Paper style={{padding: '10px'}}>
@@ -114,6 +107,7 @@ function AppWithRedux() {
                                 removeTask={removeTask}
                                 changeFilter={changeFilter}
                                 addTask={addTask}
+                                entityStatus={entityStatus}
                                 changeTaskStatus={changeTaskStatus}
                                 filter={filter}
                                 removeTodolist={removeTodolist}
