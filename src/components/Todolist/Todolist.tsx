@@ -4,11 +4,11 @@ import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Button, IconButton} from "@mui/material";
 import {Delete} from "@mui/icons-material";
 import {Task} from "../Task/Task";
-import {fetchTasksTC} from "../../services/reducers/tasks-reducer";
-import {useAppDispatch} from "../../services/store/store";
-import {TaskStatuses, TaskTypes} from "../../middleware/todolist-api";
-import {RequestStatusType} from "../../services/reducers/app-reducer";
-import {FilterValuesType} from "../../services/reducers/todolists-reducer";
+import {fetchTasksTC} from "services/reducers/tasks-reducer";
+import {useAppDispatch} from "services/store/store";
+import {TaskStatuses, TaskTypes} from "middleware/todolist-api";
+import {RequestStatusType} from "services/reducers/app-reducer";
+import {FilterValuesType} from "services/reducers/todolists-reducer";
 
 
 
@@ -57,15 +57,9 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
     const onDeleteClick = () => {
         removeTodolist(todolistId)
     }
-    const onFilterChangeAll = useCallback(() => {
-        changeFilter(todolistId, 'all')
-    }, [changeFilter, todolistId])
-    const onFilterChangeActive = useCallback(() => {
-        changeFilter(todolistId, 'active')
-    }, [changeFilter, todolistId])
-    const onFilterChangeCompleted = useCallback(() => {
-        changeFilter(todolistId, 'completed')
-    }, [changeFilter, todolistId])
+    const onFilterChangeAll = useCallback(() => {changeFilter(todolistId, 'all')}, [changeFilter, todolistId])
+    const onFilterChangeActive = useCallback(() => {changeFilter(todolistId, 'active')}, [changeFilter, todolistId])
+    const onFilterChangeCompleted = useCallback(() => {changeFilter(todolistId, 'completed')}, [changeFilter, todolistId])
     const setTodolistTitle = (newTitle: string) => {
         changeTodolistTitle(newTitle, todolistId)
     }

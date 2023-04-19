@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux'
 import {AppSetErrorType, appSetStatusAC, AppSetStatusType} from "./app-reducer";
-import {authAPI, LoginParamsType} from "../../middleware/todolist-api";
+import {authAPI, LoginParamsType} from "middleware/todolist-api";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import {AxiosError} from "axios";
 
@@ -23,7 +23,7 @@ export const setIsLoggedInAC = (value: boolean) =>
     ({type: 'login/SET-IS-LOGGED-IN', value} as const)
 
 // thunks
-export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsType>) => {
+export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<any>) => {
         dispatch(appSetStatusAC('loading'))
         authAPI.login(data)
         .then((res)=>{
@@ -37,8 +37,26 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsTyp
             .catch((error: AxiosError) => {
                 handleServerNetworkError(error, dispatch)
             })
-
 }
 
+export const logoutTC = () => (dispatch: Dispatch<ActionsType>) => {
+    dispatch(appSetStatusAC('loading'))
+    authAPI.logout()
+        .then(res => {
+            if (res.data.resultCode === 0) {
+                dispatch(setIsLoggedInAC(false))
+                dispatch(appSetStatusAC('succeeded'))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
+        })
+}
+
+
 // types
-type ActionsType = ReturnType<typeof setIsLoggedInAC> | AppSetStatusType | AppSetErrorType
+type ActionsType = SetIsLoggedType | AppSetStatusType | AppSetErrorType
+
+export type SetIsLoggedType = ReturnType<typeof setIsLoggedInAC>

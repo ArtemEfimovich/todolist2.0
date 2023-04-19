@@ -1,4 +1,4 @@
-import {todolistAPI, TodolistType} from "../../middleware/todolist-api";
+import {todolistAPI, TodolistType} from "middleware/todolist-api";
 import {DispatchType} from "../store/store";
 import {
     addTodolistAC,
@@ -48,12 +48,7 @@ export const todolistsReducer = (state: TodolistDomainType[] = initialState, act
             }
             return [...state]
         case 'CHANGE-TODOLIST-FILTER': {
-            let stateCopy = [...state]
-            const todolistFilter = stateCopy.find(tl => tl.id === action.id)
-            if (todolistFilter) {
-                todolistFilter.filter = action.filter
-            }
-            return stateCopy
+            return state.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
         }
         case'SET-TODOLISTS': {
             return action.todolists.map((tl) => {

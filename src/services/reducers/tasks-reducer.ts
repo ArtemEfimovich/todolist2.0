@@ -1,4 +1,4 @@
-import {TaskStatuses, todolistAPI} from "../../middleware/todolist-api";
+import {TaskStatuses, todolistAPI} from "middleware/todolist-api";
 import {AppRootStateType, DispatchType} from "../store/store";
 import {
     addTaskAC,
@@ -15,7 +15,7 @@ import {
 import {appSetStatusAC} from "./app-reducer";
 import {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
-import {TasksStateType} from "../../components/TodolistPage/TodolistPage";
+import {TasksStateType} from "components/TodolistPage/TodolistPage";
 
 
 type ActionsType = RemoveTaskActionType |

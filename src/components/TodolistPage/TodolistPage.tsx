@@ -8,11 +8,12 @@ import {
     fetchTodolistsTC,
     FilterValuesType, removeTodolistTC,
     TodolistDomainType
-} from "../../services/reducers/todolists-reducer";
-import {useAppDispatch, useAppSelector} from "../../services/store/store";
-import {changeTodolistFilterAC} from "../../services/actions/todolists-actions";
-import {createTaskTC, removeTaskTC, updateTaskStatusTC, updateTaskTitleTC} from "../../services/reducers/tasks-reducer";
-import {TaskStatuses, TaskTypes} from "../../middleware/todolist-api";
+} from "services/reducers/todolists-reducer";
+import {useAppDispatch, useAppSelector} from "services/store/store";
+import {changeTodolistFilterAC} from "services/actions/todolists-actions";
+import {createTaskTC, removeTaskTC, updateTaskStatusTC, updateTaskTitleTC} from "services/reducers/tasks-reducer";
+import {TaskStatuses, TaskTypes} from "middleware/todolist-api";
+import {Navigate} from "react-router-dom";
 
 
 export type TasksStateType = {
@@ -22,8 +23,12 @@ export type TasksStateType = {
 export const TodolistPage: React.FC = () => {
 
     const dispatch = useAppDispatch()
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
 
     useEffect(() => {
+        if(!isLoggedIn){
+            return
+        }
         dispatch(fetchTodolistsTC())
     }, [])
 
@@ -62,6 +67,11 @@ export const TodolistPage: React.FC = () => {
         dispatch(addTodolistTC(title))
     }, [dispatch])
 
+
+
+    if(!isLoggedIn){
+        return <Navigate to ='/login'/>
+    }
 
     return (
         <Container>
