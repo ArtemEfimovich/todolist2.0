@@ -1,8 +1,8 @@
 import {Dispatch} from "redux";
 import {authAPI} from "middleware/todolist-api";
-import {setIsLoggedInAC, SetIsLoggedType} from "./auth-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import {AxiosError} from "axios";
+import {authActions} from "services/reducers/auth-reducer";
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -11,7 +11,7 @@ export type AppSetStatusType = ReturnType<typeof appSetStatusAC>
 export type AppSetErrorType = ReturnType<typeof appSetErrorAC>
 
 export type AppSetInitializedType = ReturnType<typeof appSetInitializedAC>
-type ActionType = AppSetStatusType | AppSetErrorType |SetIsLoggedType |AppSetInitializedType
+type ActionType = AppSetStatusType | AppSetErrorType |AppSetInitializedType
 type InitialStateType = typeof initialState
 
 const initialState = {
@@ -48,7 +48,7 @@ export const appSetInitializedAC = (isInitialized:boolean)=>{
 export const initializeAppTC = () => (dispatch:Dispatch<any>) => {
     authAPI.me().then(res => {
         if (res.data.resultCode === 0) {
-            dispatch(setIsLoggedInAC(true))
+            dispatch(authActions.setIsLoggedIn({value:true}))
             dispatch(appSetInitializedAC(true))
         } else {
             handleServerAppError(res.data, dispatch)
