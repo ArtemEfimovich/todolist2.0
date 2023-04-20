@@ -7,11 +7,7 @@ import {
     ChangeTaskTitleActionType, removeTaskAC,
     RemoveTaskActionType, setTasksAC, SetTasksActionType
 } from "../actions/task-actions";
-import {
-    AddTodolistActionType,
-    RemoveTodoListActionType,
-    SetTodolistsActionType
-} from "../actions/todolists-actions";
+
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import {TasksStateType} from "components/TodolistPage/TodolistPage";
 import {appActions} from "services/reducers/app-reducer";
@@ -22,9 +18,6 @@ type ActionsType = RemoveTaskActionType |
     AddTaskActionType |
     ChangeTaskTitleActionType |
     ChangeTaskStatusActionType |
-    AddTodolistActionType |
-    RemoveTodoListActionType |
-    SetTodolistsActionType |
     SetTasksActionType
 
 const initialState: TasksStateType = {}
