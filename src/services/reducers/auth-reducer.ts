@@ -1,9 +1,9 @@
 import { Dispatch } from 'redux'
-import {appSetStatusAC} from "./app-reducer";
 import {authAPI, LoginParamsType} from "middleware/todolist-api";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import {AxiosError} from "axios";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {appActions} from "services/reducers/app-reducer";
 
 
 const initialState = {
@@ -24,12 +24,12 @@ export const authReducer = slice.reducer
 export const authActions = slice.actions
 
 export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
-        dispatch(appSetStatusAC('loading'))
+        dispatch(appActions.appSetStatus({status:'loading'}))
         authAPI.login(data)
-        .then((res)=>{
-                if(res.data.resultCode === 0){
+        .then((res)=> {
+            if(res.data.resultCode === 0){
                     dispatch(authActions.setIsLoggedIn({value:true}))
-                    dispatch(appSetStatusAC('succeeded'))
+                    dispatch(appActions.appSetStatus({status:'succeeded'}))
                 }else{
                     handleServerAppError(res.data, dispatch)
                 }
@@ -40,12 +40,12 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
 }
 
 export const logoutTC = () => (dispatch: Dispatch) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     authAPI.logout()
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(authActions.setIsLoggedIn({value:false}))
-                dispatch(appSetStatusAC('succeeded'))
+                dispatch(appActions.appSetStatus({status:'succeeded'}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }

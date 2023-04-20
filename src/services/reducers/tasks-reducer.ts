@@ -12,10 +12,10 @@ import {
     RemoveTodoListActionType,
     SetTodolistsActionType
 } from "../actions/todolists-actions";
-import {appSetStatusAC} from "./app-reducer";
-import {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 import {TasksStateType} from "components/TodolistPage/TodolistPage";
+import {appActions} from "services/reducers/app-reducer";
+import {AxiosError} from "axios";
 
 
 type ActionsType = RemoveTaskActionType |
@@ -82,25 +82,25 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 
 
 export const fetchTasksTC = (todolistId: string) => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     todolistAPI.getTask(todolistId)
         .then((res) => {
             let tasks = res.data.items
             dispatch(setTasksAC(tasks, todolistId))
-            dispatch(appSetStatusAC('succeeded'))
+            dispatch(appActions.appSetStatus({status:'succeeded'}))
         })
         .catch((error: AxiosError) => {
             handleServerNetworkError(error, dispatch)
         })
 }
 export const createTaskTC = (todolistId: string, title: string) => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     todolistAPI.createTask(todolistId, title)
         .then((res) => {
             if (res.data.resultCode === 0) {
                 const task = res.data.data.item
                 dispatch(addTaskAC(task))
-                dispatch(appSetStatusAC('succeeded'))
+                dispatch(appActions.appSetStatus({status:'succeeded'}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }
@@ -110,11 +110,11 @@ export const createTaskTC = (todolistId: string, title: string) => (dispatch: Di
         })
 }
 export const removeTaskTC = (taskId: string, todolistId: string) => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     todolistAPI.deleteTask(todolistId, taskId)
         .then(() => {
             dispatch(removeTaskAC(taskId, todolistId))
-            dispatch(appSetStatusAC('succeeded'))
+            dispatch(appActions.appSetStatus({status:'succeeded'}))
         }).catch((error: AxiosError) => {
         handleServerNetworkError(error, dispatch)
     })
@@ -127,7 +127,7 @@ export const updateTaskTitleTC = (id: string, title: string, todolistId: string)
     const task = taskFofCurrentTodo.find(t => t.id === id)
 
     if (task) {
-        dispatch(appSetStatusAC('loading'))
+        dispatch(appActions.appSetStatus({status:'loading'}))
         todolistAPI.updateTask(todolistId, id, {
             title: title,
             deadline: task.deadline,
@@ -139,7 +139,7 @@ export const updateTaskTitleTC = (id: string, title: string, todolistId: string)
             .then((res) => {
                 if (res.data.resultCode === 0) {
                     dispatch(changeTaskTitleAC(id, title, todolistId))
-                    dispatch(appSetStatusAC('succeeded'))
+                    dispatch(appActions.appSetStatus({status:'succeeded'}))
                 } else {
                     handleServerAppError(res.data, dispatch)
                 }
@@ -156,7 +156,7 @@ export const updateTaskStatusTC = (id: string, status: TaskStatuses, todolistId:
     const task = taskFofCurrentTodo.find(t => t.id === id)
 
     if (task) {
-        dispatch(appSetStatusAC('loading'))
+        dispatch(appActions.appSetStatus({status:'loading'}))
         todolistAPI.updateTask(todolistId, id, {
             title: task.title,
             deadline: task.deadline,
@@ -168,7 +168,7 @@ export const updateTaskStatusTC = (id: string, status: TaskStatuses, todolistId:
             .then((res) => {
                 if (res.data.resultCode === 0) {
                     dispatch(changeTaskStatusAC(id, status, todolistId))
-                    dispatch(appSetStatusAC('succeeded'))
+                    dispatch(appActions.appSetStatus({status:'succeeded'}))
                 } else {
                     handleServerAppError(res.data, dispatch)
                 }

@@ -13,7 +13,7 @@ import {
     setTodolistsAC,
     SetTodolistsActionType
 } from "../actions/todolists-actions";
-import {appSetStatusAC, RequestStatusType} from "./app-reducer";
+import {appActions, RequestStatusType} from "./app-reducer";
 import {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 
@@ -64,11 +64,11 @@ export const todolistsReducer = (state: TodolistDomainType[] = initialState, act
 
 
 export const fetchTodolistsTC = () => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     todolistAPI.getTodolists()
         .then((res) => {
             dispatch(setTodolistsAC(res.data))
-            dispatch(appSetStatusAC('succeeded'))
+            dispatch(appActions.appSetStatus({status:'succeeded'}))
         })
         .catch((error: AxiosError) => {
             handleServerNetworkError(error, dispatch)
@@ -76,12 +76,12 @@ export const fetchTodolistsTC = () => (dispatch: DispatchType<any>) => {
 }
 
 export const addTodolistTC = (title: string) => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     todolistAPI.createTodolist(title)
         .then((res) => {
             if (res.data.resultCode === 0) {
                 dispatch(addTodolistAC(res.data.data.item))
-                dispatch(appSetStatusAC('succeeded'))
+                dispatch(appActions.appSetStatus({status:'succeeded'}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }
@@ -92,12 +92,12 @@ export const addTodolistTC = (title: string) => (dispatch: DispatchType<any>) =>
 }
 
 export const removeTodolistTC = (todolistId: string) => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     dispatch(changeTodolistEntityStatusAC(todolistId, 'loading'))
     todolistAPI.deleteTodolist(todolistId)
         .then(() => {
             dispatch(removeTodolistAC(todolistId))
-            dispatch(appSetStatusAC('succeeded'))
+            dispatch(appActions.appSetStatus({status:'succeeded'}))
         })
         .catch((error: AxiosError) => {
             handleServerNetworkError(error, dispatch)
@@ -105,11 +105,11 @@ export const removeTodolistTC = (todolistId: string) => (dispatch: DispatchType<
 }
 
 export const changeTodolistTitleTC = (title: string, todolistId: string) => (dispatch: DispatchType<any>) => {
-    dispatch(appSetStatusAC('loading'))
+    dispatch(appActions.appSetStatus({status:'loading'}))
     todolistAPI.updateTodolist(todolistId, title)
         .then(() => {
             dispatch(changeTodolistTitleAC(todolistId, title))
-            dispatch(appSetStatusAC('succeeded'))
+            dispatch(appActions.appSetStatus({status:'succeeded'}))
         })
         .catch((error: AxiosError) => {
             handleServerNetworkError(error, dispatch)
