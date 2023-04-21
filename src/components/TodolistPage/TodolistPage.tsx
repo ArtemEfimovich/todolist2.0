@@ -7,11 +7,14 @@ import {
     changeTodolistTitleTC,
     fetchTodolistsTC,
     FilterValuesType, removeTodolistTC,
-    TodolistDomainType
+    TodolistDomainType, todolistsActions
 } from "services/reducers/todolists-reducer";
 import {useAppDispatch, useAppSelector} from "services/store/store";
-import {changeTodolistFilterAC} from "services/actions/todolists-actions";
-import {createTaskTC, removeTaskTC, updateTaskStatusTC, updateTaskTitleTC} from "services/reducers/tasks-reducer";
+import {
+    createTaskTC,
+    removeTaskTC,
+    updateTaskTC,
+} from "services/reducers/tasks-reducer";
 import {TaskStatuses, TaskTypes} from "middleware/todolist-api";
 import {Navigate} from "react-router-dom";
 
@@ -36,7 +39,7 @@ export const TodolistPage: React.FC = () => {
     const todolists = useAppSelector<TodolistDomainType[]>(state => state.todolists)
 
     const changeFilter = useCallback((todolistId: string, filter: FilterValuesType) => {
-        dispatch(changeTodolistFilterAC(todolistId, filter))
+        dispatch(todolistsActions.changeTodolistFilter({id:todolistId, filter}))
     }, [dispatch])
 
     const addTask = useCallback((title: string, todolistId: string) => {
@@ -48,11 +51,11 @@ export const TodolistPage: React.FC = () => {
     }, [dispatch])
 
     const changeTaskStatus = useCallback((id: string, status: TaskStatuses, todolistId: string) => {
-        dispatch(updateTaskStatusTC(id, status, todolistId))
+        dispatch(updateTaskTC(id,{ status}, todolistId))
     }, [dispatch])
 
     const changeTaskTitle = useCallback((id: string, title: string, todolistId: string) => {
-        dispatch(updateTaskTitleTC(id, title, todolistId))
+        dispatch(updateTaskTC(id, {title}, todolistId))
     }, [dispatch])
 
     const changeTodolistTitle = useCallback((title: string, todolistId: string) => {
