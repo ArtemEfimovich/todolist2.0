@@ -13,7 +13,7 @@ export type TodolistType = {
     addedDate: string
     order: number
     title: string
-    filter: string
+    filter?: string
 }
 export type ResponseType<D> = {
     resultCode: number
