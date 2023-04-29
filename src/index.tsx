@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom';
 import './assets/styles/index.css';
 import App from "./pages/App";
 import {Provider} from "react-redux";
-import {store} from "./services/store/store";
-import {HashRouter} from "react-router-dom";
+import {store} from "services/store/store";
+import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.render(
-    <HashRouter>
+    <BrowserRouter>
         <Provider store={store}>
             <App/>
         </Provider>
-    </HashRouter>
+    </BrowserRouter>
 
     , document.getElementById('root'));
 
